@@ -1,0 +1,163 @@
+paths:
+  /api/adoptions:
+    get:
+      summary: Obtiene todas las adopciones.
+      tags:
+        - Adoptions
+      responses:
+        "200":
+          description: La operación se realizó con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Adoption'
+        "500":
+          description: Error del servidor.
+    post:
+      summary: Crea una nueva adopción.
+      tags:
+        - Adoptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/createAdoption'
+      responses:
+        "201":
+          description: Adopción creada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adoption'
+        "400":
+          description: Datos inválidos.
+        "500":
+          description: Error del servidor.
+
+  /api/adoptions/{aid}:
+    get:
+      summary: Obtiene una adopción específica por su ID.
+      tags:
+        - Adoptions
+      parameters:
+        - name: aid
+          in: path
+          required: true
+          description: ID de la adopción a obtener.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: La operación se realizó con éxito.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adoption'
+        "404":
+          description: Adopción no encontrada.
+        "500":
+          description: Error del servidor.
+    put:
+      summary: Actualiza una adopción específica por su ID.
+      tags:
+        - Adoptions
+      parameters:
+        - name: aid
+          in: path
+          required: true
+          description: ID de la adopción a actualizar.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/updateAdoption'
+      responses:
+        "200":
+          description: Adopción actualizada exitosamente.
+        "404":
+          description: Adopción no encontrada.
+        "500":
+          description: Error del servidor.
+    delete:
+      summary: Elimina una adopción específica por su ID.
+      tags:
+        - Adoptions
+      parameters:
+        - name: aid
+          in: path
+          required: true
+          description: ID de la adopción a eliminar.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Adopción eliminada exitosamente.
+        "404":
+          description: Adopción no encontrada.
+        "500":
+          description: Error del servidor.
+
+components:
+  schemas:
+    Adoption:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID automático generado por MongoDB.
+        user:
+          type: string
+          description: ID del usuario que adopta.
+        pet:
+          type: string
+          description: ID de la mascota adoptada.
+        date:
+          type: string
+          format: date
+          description: Fecha de la adopción.
+      example:
+        _id: "647fa8c9e46dbc5a20320181"
+        user: "647fa8c9e46dbc5a20320182"
+        pet: "647fa8c9e46dbc5a20320183"
+        date: "2024-05-20"
+  requestBodies:
+    createAdoption:
+      type: object
+      properties:
+        user:
+          type: string
+          description: ID del usuario que adopta.
+        pet:
+          type: string
+          description: ID de la mascota adoptada.
+        date:
+          type: string
+          format: date
+          description: Fecha de la adopción.
+      example:
+        user: "647fa8c9e46dbc5a20320182"
+        pet: "647fa8c9e46dbc5a20320183"
+        date: "2024-05-20"
+    updateAdoption:
+      type: object
+      properties:
+        user:
+          type: string
+          description: ID del usuario que adopta.
+        pet:
+          type: string
+          description: ID de la mascota adoptada.
+        date:
+          type: string
+          format: date
+          description: Fecha de la adopción.
+      example:
+        user: "647fa8c9e46dbc5a20320182"
+        pet: "647fa8c9e46dbc5a20320183"
+        date: "2024-05-21"

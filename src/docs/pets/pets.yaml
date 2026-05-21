@@ -1,0 +1,184 @@
+paths:
+  /api/pets:
+    get:
+      summary: Obtiene todas las mascotas.
+      tags:
+        - Pets
+      responses:
+        "200":
+          description: La operación se realizó con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        "500":
+          description: Error del servidor.
+    post:
+      summary: Crea una nueva mascota.
+      tags:
+        - Pets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/createPet'
+      responses:
+        "201":
+          description: Mascota creada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        "400":
+          description: Datos inválidos.
+        "500":
+          description: Error del servidor.
+
+  /api/pets/withimage:
+    post:
+      summary: Crea una nueva mascota con imagen.
+      tags:
+        - Pets
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+                  description: Nombre de la mascota.
+                type:
+                  type: string
+                  description: Tipo de mascota.
+                age:
+                  type: integer
+                  description: Edad de la mascota.
+      responses:
+        "201":
+          description: Mascota creada exitosamente con imagen.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        "400":
+          description: Datos inválidos.
+        "500":
+          description: Error del servidor.
+    put:
+      summary: Actualiza una mascota específica por su ID.
+      tags:
+        - Pets
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID de la mascota a actualizar.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/updatePet'
+      responses:
+        "200":
+          description: Mascota actualizada exitosamente.
+        "404":
+          description: Mascota no encontrada.
+        "500":
+          description: Error del servidor.
+    delete:
+      summary: Elimina una mascota específica por su ID.
+      tags:
+        - Pets
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID de la mascota a eliminar.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Mascota eliminada exitosamente.
+        "404":
+          description: Mascota no encontrada.
+        "500":
+          description: Error del servidor.
+
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID automático generado por MongoDB.
+        name:
+          type: string
+          description: Nombre de la mascota.
+        type:
+          type: string
+          description: Tipo de mascota (perro, gato, etc.).
+        age:
+          type: integer
+          description: Edad de la mascota.
+        image:
+          type: string
+          description: URL de la imagen de la mascota.
+      example:
+        _id: "647fa8c9e46dbc5a20320181"
+        name: Firulais
+        type: perro
+        age: 3
+        image: "https://ejemplo.com/imagen.jpg"
+  requestBodies:
+    createPet:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre de la mascota.
+        type:
+          type: string
+          description: Tipo de mascota.
+        age:
+          type: integer
+          description: Edad de la mascota.
+        image:
+          type: string
+          description: URL de la imagen de la mascota.
+      example:
+        name: Firulais
+        type: perro
+        age: 3
+        image: "https://ejemplo.com/imagen.jpg"
+    updatePet:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre de la mascota.
+        type:
+          type: string
+          description: Tipo de mascota.
+        age:
+          type: integer
+          description: Edad de la mascota.
+        image:
+          type: string
+          description: URL de la imagen de la mascota.
+      example:
+        name: Firulais
+        type: perro
+        age: 4
+        image: "https://ejemplo.com/imagen.jpg"
